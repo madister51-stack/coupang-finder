@@ -26,17 +26,32 @@ def translate_any(text: str, src_code: str, tgt_code: str) -> str:
         return text
 
 
-# 검색 링크 생성 함수
-def make_links(query):
-    query_encoded = quote_plus(query)
+# 검색 링크 생성 (중국어로 번역 후 각 마켓 검색 결과로 이동)
+def make_links(query_ko: str):
+    try:
+        q_cn = translate_any(query_ko, "ko", "zh-CN") or query_ko
+    except Exception:
+        q_cn = query_ko
+
+    q = quote_plus(q_cn)
+
+    links = {
+        "알리익스프레스": f"https://www.aliexpress.com/wholesale?SearchText={q}",
+        "타오바오": f"https://s.taobao.com/search?q={q}&ie=utf8",
+        "티몰(Tmall)": f"https://list.tmall.com/search_product.htm?q={q}",
+        "1688": f"https://s.1688.com/selloffer/offer_search.htm?keywords={q}",
+        "알리바바 글로벌": f"https://www.alibaba.com/trade/search?fsb=y&IndexArea=product_en&SearchText={q}",
+        "테무": f"https://www.temu.com/search_result.html?search_key={q}",
+        "징둥(JD)": f"https://search.jd.com/Search?keyword={q}&enc=utf-8",
+    }
+
     st.markdown("### 🌏 검색 결과 링크")
-    st.write(f"[🔍 알리익스프레스 검색](https://ko.aliexpress.com/wholesale?catId=0&SearchText={query_encoded})")
-    st.write(f"[🛍️ 타오바오 검색](https://s.taobao.com/search?q={query_encoded})")
-    st.write(f"[🧾 1688 검색](https://s.1688.com/selloffer/offer_search.htm?keywords={query_encoded})")
+    for name, url in links.items():
+        st.markdown(f"- [{name} 검색]({url})")
 
 
 # -------------------------------
-# Streamlit 화면 시작
+# Streamlit 화면 구성
 # -------------------------------
 
 st.set_page_config(page_title="쿠팡 → 중국마켓 자동검색기", page_icon="🛒", layout="centered")
@@ -46,19 +61,17 @@ st.write("쿠팡 상품명(또는 핵심 키워드)을 입력하면 중국/글�
 
 st.markdown("---")
 
-# 입력창
 st.subheader("🔎 쿠팡 상품명 입력")
 product_name = st.text_input("예: 무선 청소기, 욕실 선반, 창문 청소기")
 
 if product_name:
-    # 한글 → 중국어 번역
     translated = translate_any(product_name, "ko", "zh-CN")
     st.success(f"자동 번역된 중국어: **{translated}**")
     make_links(translated)
 
 st.markdown("---")
 
-# 🔤 수동 번역기 기능
+# 🔤 수동 번역기
 st.subheader("🔤 빠른 번역기 (수동)")
 
 with st.form("manual_translator"):
