@@ -36,13 +36,14 @@ def make_links(query_ko: str):
     q = quote_plus(q_cn)
 
     links = {
-        "알리익스프레스": f"https://www.aliexpress.com/wholesale?SearchText={q}",
-        "타오바오": f"https://s.taobao.com/search?q={q}&ie=utf8",
-        "티몰(Tmall)": f"https://list.tmall.com/search_product.htm?q={q}",
-        "1688": f"https://s.1688.com/selloffer/offer_search.htm?keywords={q}",
-        "알리바바 글로벌": f"https://www.alibaba.com/trade/search?fsb=y&IndexArea=product_en&SearchText={q}",
-        "테무": f"https://www.temu.com/search_result.html?search_key={q}",
-        "징둥(JD)": f"https://search.jd.com/Search?keyword={q}&enc=utf-8",
+        "알리익스프레스 검색": lambda q: build_url("https://www.aliexpress.com/wholesale?SearchText=", q),
+    "타오바오 검색":       lambda q: build_url("https://s.taobao.com/search?q=", q),
+    "티몰(Tmall) 검색":   lambda q: build_url("https://list.tmall.com/search_product.htm?q=", q),
+    "1688 검색":          lambda q: build_url("https://s.1688.com/selloffer/offer_search.htm?keywords=", q),
+    "알리바바 글로벌 검색": lambda q: build_url("https://www.alibaba.com/trade/search?fsb=y&IndexArea=product_en&SearchText=", q),
+    "테무 검색":           lambda q: build_url("https://www.temu.com/search_result.html?search_key=", q),
+    "징둥(JD) 검색":      lambda q: build_url("https://search.jd.com/Search?keyword=", q),
+    "쿠팡 검색":           lambda q: build_url("https://www.coupang.com/np/search?q=", q),  
     }
 
     st.markdown("### 🌏 검색 결과 링크")
